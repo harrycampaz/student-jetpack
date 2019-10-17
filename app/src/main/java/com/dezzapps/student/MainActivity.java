@@ -1,11 +1,13 @@
 package com.dezzapps.student;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.dezzapps.student.adapters.StudentAdapter;
 import com.dezzapps.student.data.StudentDatabase;
+import com.dezzapps.student.databinding.ActivityMainBinding;
 import com.dezzapps.student.entity.Student;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -14,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Student> students;
     private StudentAdapter studentAdapter;
 
+    private ActivityMainBinding activityMainBinding;
+    private  MainActivityClickHandler mainActivityClickHandler;
+
     public final int NEW_STUDENT_ACTYVITY_REQUEST_CODE = 1;
 
     @Override
@@ -42,7 +48,13 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerStudents);
+        activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
+        mainActivityClickHandler = new MainActivityClickHandler(this);
+
+        activityMainBinding.setClickHandler(mainActivityClickHandler);
+
+        RecyclerView recyclerView = activityMainBinding.layoutContentMain.recyclerStudents;
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
@@ -76,14 +88,14 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+       /* FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, AddNewStudentActivity.class);
                 startActivityForResult(intent, NEW_STUDENT_ACTYVITY_REQUEST_CODE);
             }
-        });
+        });*/
     }
 
     private void loadData() {
@@ -100,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == NEW_STUDENT_ACTYVITY_REQUEST_CODE && resultCode == RESULT_OK){
             String name = data.getStringExtra("NAME");
             String email = data.getStringExtra("EMAIL");
-            String country = data.getStringExtra("Country");
+            String country = data.getStringExtra("COUNTRY");
 
             SimpleDateFormat simpleDateFormat = new java.text.SimpleDateFormat("DD,MM,YYY");
             String currentDate = simpleDateFormat.format(new Date());
@@ -109,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
             student.setName(name);
             student.setEmail(email);
             student.setCountry(country);
+            student.setRegisteredTime(currentDate);
 
             addNewStudent(student);
         }
@@ -191,4 +204,20 @@ public class MainActivity extends AppCompatActivity {
             loadData();
         }
     }
+
+
+    public class  MainActivityClickHandler{
+        Context context;
+
+        public MainActivityClickHandler(Context context) {
+            this.context = context;
+        }
+
+        public void onFabClicked( View view){
+            Intent intent = new Intent(MainActivity.this, AddNewStudentActivity.class);
+            startActivityForResult(intent, NEW_STUDENT_ACTYVITY_REQUEST_CODE);
+        }
+    }
+
+
 }

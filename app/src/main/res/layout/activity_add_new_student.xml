@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    
+    <data>
+        <variable
+            name="clickHandler"
+            type="com.dezzapps.student.AddNewStudentActivity.AddNewStudentActivityClickHandler" />
+
+        <variable name="student" type="com.dezzapps.student.entity.Student"/>
+
+
+    </data>
+
+
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -27,8 +43,11 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:backgroundTint="@color/colorPrimaryDark"
+        android:onClick="@{clickHandler::onSubmitClicked}"
         app:srcCompat="@android:drawable/ic_input_add" />
 
-    <include layout="@layout/content_add_new_student" />
+    <include layout="@layout/content_add_new_student" bind:student="@{student}"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</layout>

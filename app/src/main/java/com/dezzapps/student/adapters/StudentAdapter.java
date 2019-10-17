@@ -5,9 +5,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dezzapps.student.R;
+import com.dezzapps.student.databinding.StudentListItemBinding;
 import com.dezzapps.student.entity.Student;
 import com.dezzapps.student.holder.StudentItem;
 
@@ -22,10 +24,15 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentItem> {
     @Override
     public StudentItem onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View itemView = LayoutInflater.from(parent.getContext())
+     /*   View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.student_list_item, parent, false);
 
-        return new StudentItem(itemView);
+        return new StudentItem(itemView);*/
+
+        StudentListItemBinding studentListItemBinding = DataBindingUtil.inflate( LayoutInflater.from(parent.getContext()),
+                R.layout.student_list_item, parent, false);
+
+       return  new StudentItem(studentListItemBinding);
     }
 
     @Override
@@ -33,7 +40,10 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentItem> {
 
         Student currentStuden = students.get(position);
 
-        holder.bind(currentStuden);
+        holder.studentListItemBinding.setStudent(currentStuden);
+
+
+        //holder.bind(currentStuden);
 
     }
 
